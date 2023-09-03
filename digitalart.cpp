@@ -31,18 +31,9 @@ struct BMPDIBHeader
 
 int main()
 {
+    //Create canvas
     scribe canvas;
-    //TEST AREA
-    std::vector<pixel> tmpvector = canvas.rectangle(15, 15, 5, 5, 255, 100, 50);
-    for (int i = 0; i < tmpvector.size(); ++i) {
-        int values[5] = {tmpvector[i].coord[0],tmpvector[i].coord[1],tmpvector[i].RGB[0],tmpvector[i].RGB[1],tmpvector[i].RGB[2]};
-        for (int j = 0; j < 5; j++)
-        {
-            std::cout<<values[j] << ", ";
-        }
-        std::cout<<std::endl;
-    }
-    //
+    //Make blank picture
     BMPFileHeader fileHeader;
     BMPDIBHeader dibHeader;
 
@@ -60,9 +51,9 @@ int main()
     {
         for ( int x = 0; x < WIDTH; x++)
         {
-            image[y][x][0] = x%255;
-            image[y][x][1] = (x+10)%255;
-            image[y][x][2] = y%255;
+            image[y][x][0] = 255;
+            image[y][x][1] = 255;
+            image[y][x][2] = 255;
         }
     }
 
@@ -89,8 +80,36 @@ int main()
     outFile.write(reinterpret_cast<char*>(&dibHeader), sizeof(dibHeader));
     outFile.write(reinterpret_cast<char*>(&image), imageSize);
 
+
+    //Modify Image
+    //BPM keep pixels left bottom cornet to right top corner
+    //Keep RGB order BGR
+    //Create a rectangle
+    std::vector<pixel> tmpvector = canvas.rectangle(250, 250, 5, 5, 255, 100, 50);
+    for (int i = 0; i < tmpvector.size(); i++)
+    {
+        //Replace
+        int pixelplace = tmpvector[i].coord[0] + (tmpvector[i].coord[1] * WIDTH);
+        outFile.seekp((fileHeader.dataOffset + pixelplace*3));
+
+        outFile.put(tmpvector[i].RGB[2]);
+        outFile.put(tmpvector[i].RGB[1]);
+        outFile.put(tmpvector[i].RGB[0]);
+    }
+
     //Close file
     outFile.close();
+    
+    //TEST AREA(DEBUG)
+    //for (int i = 0; i < tmpvector.size(); ++i) {
+    //    int values[5] = {tmpvector[i].coord[0],tmpvector[i].coord[1],tmpvector[i].RGB[0],tmpvector[i].RGB[1],tmpvector[i].RGB[2]};
+    //    for (int j = 0; j < 5; j++)
+    //    {
+    //        std::cout<<values[j] << ", ";
+    //    }
+    //    std::cout<<std::endl;
+    //}
+    //
     
     std::cout << "Success" << std:: endl;
     
