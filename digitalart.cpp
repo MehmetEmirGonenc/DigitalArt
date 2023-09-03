@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdint>
+#include <vector>
 #include "scriber.h"
 
 #pragma pack(1) // Disable structure padding
@@ -28,9 +29,81 @@ struct BMPDIBHeader
     uint32_t NumberOfColorsInPallette = 0;
     uint32_t NumberOfImportantColors = 0;
 };
+struct shape
+{
+    char type;
+    int width;//Also can be radius
+    int height;
+    char position;
+};
+
 
 int main()
 {
+    //UI   // Note to me : Add ensuring operations
+    //variables
+    int WIDTH;
+    int HEIGHT;
+    std::vector<shape> order;
+    shape tempshape;
+    std::cout << "Welcome to Digital Art Program!\n";
+    std::cout << "Input width of picture that you want to create : ";
+    std::cin >> WIDTH;
+    std::cout << "Input height of picture that you want to create : ";
+    std::cin >> HEIGHT;
+    while (true)
+    {
+        std::cout << "############### Let's begin to create our art #########################\n";
+        std::cout << "R -> Eectangle\n";
+        std::cout << "T -> Triangle\n";
+        std::cout << "C -> Circle\n";
+        std::cout << "P -> Process\n";
+        std::cout << "E -> Exit\n";
+        std::cout << "-->";
+        std::cin >> tempshape.type;
+        if (tempshape.type == 'E' || tempshape.type == 'e')
+        {
+            return 2;
+        }
+        else if (tempshape.type == 'P' || tempshape.type == 'p')
+        {
+            if (order.size() == 0)
+            {
+                std::cout << "Eroor: Order is null!\n";
+                return 3;
+            }
+            break;
+        }
+        else
+        {
+            std::cout << "---Set Position--- \n";
+            std::cout << "C -> Center \n";
+            std::cout << "1 -> Area 1\n";
+            std::cout << "2 -> Area 2\n";
+            std::cout << "3 -> Area 3\n";
+            std::cout << "4 -> Area 4\n";
+            std::cout << "-->";
+            std::cin >> tempshape.position;
+            if (tempshape.type == 'R' || tempshape.type == 'r')
+            {
+                std::cout << "Width :";
+                std::cin >>tempshape.width;
+                std::cout << "Height :";
+                std::cin >>tempshape.height;
+            }
+            else if (tempshape.type == 'T' || tempshape.type == 't')
+            {
+                std::cout << "Width :";
+                std::cin >>tempshape.width;
+            }
+            else if (tempshape.type == 'C' || tempshape.type == 'c')
+            {
+                std::cout << "Radious :";
+                std::cin >>tempshape.width;
+            }
+        } 
+    }
+
     //Create canvas
     scribe canvas;
     //Make blank picture
@@ -38,27 +111,19 @@ int main()
     BMPDIBHeader dibHeader;
 
     //Decleration width and height and implamet
-    const int WIDTH = 500;
-    const int HEIGHT = 500;
 
     dibHeader.ImageWidth = static_cast<uint32_t>(WIDTH);
     dibHeader.ImageHeight = static_cast<uint32_t>(HEIGHT);
 
-    //Creating image
-    uint8_t image[HEIGHT][WIDTH][3];
-
-    for (int y = 0; y < HEIGHT; y++)
+    //Creating blank image
+    std::vector<uint8_t> blank_image;
+    for (int i = 0; i < WIDTH * HEIGHT * 3; i++)
     {
-        for ( int x = 0; x < WIDTH; x++)
-        {
-            image[y][x][0] = 255;
-            image[y][x][1] = 255;
-            image[y][x][2] = 255;
-        }
+        blank_image.push_back(255);
     }
 
     //Calculations
-    uint32_t imageSize = sizeof(image);
+    uint32_t imageSize = sizeof(blank_image);
 
     dibHeader.ImageSize = imageSize;
     fileHeader.dataOffset = sizeof(fileHeader) + sizeof(dibHeader);
@@ -78,8 +143,14 @@ int main()
 
     outFile.write(reinterpret_cast<char*>(&fileHeader), sizeof(fileHeader));
     outFile.write(reinterpret_cast<char*>(&dibHeader), sizeof(dibHeader));
-    outFile.write(reinterpret_cast<char*>(&image), imageSize);
+    outFile.write(reinterpret_cast<char*>(&blank_image), imageSize);
 
+    //Decleration coord postions
+    int CENTER[2] = {(WIDTH / 2), (HEIGHT / 2)};
+    int AREA1[2] = {(WIDTH * 3 / 4), (HEIGHT * 3 / 4)};
+    int AREA2[2] = {(WIDTH / 4), (HEIGHT * 3 / 4)};
+    int AREA3[2] = {(WIDTH / 4), (HEIGHT / 4)};
+    int AREA4[2] = {(WIDTH * 3 / 4), (HEIGHT / 4)};
 
     //Modify Image
     //BPM keep pixels left bottom cornet to right top corner
