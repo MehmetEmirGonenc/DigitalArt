@@ -36,6 +36,7 @@ struct shape
     int width;//Also can be radius
     int height;
     char position;
+    bool isfilled;
 };
 
 
@@ -85,6 +86,10 @@ int main()
             std::cout << "4 -> Area 4\n";
             std::cout << "-->";
             std::cin >> tempshape.position;
+            std::cout << "0->Not filled\n";
+            std::cout << "1->Filled\n";
+            std::cout << "-->";
+            std::cin >> tempshape.isfilled;
             if (tempshape.type == 'R' || tempshape.type == 'r')
             {
                 std::cout << "Width :";
@@ -181,7 +186,7 @@ int main()
         std::vector<pixel> tmpvector;
         if (order[i].type == 'R' || order[i].type == 'r')
         {
-            tmpvector = canvas.rectangle(positionX, positionY, order[i].width, order[i].height, 255, 100, 50);
+            tmpvector = canvas.rectangle(positionX, positionY, order[i].width, order[i].height, 255, 100, 50, order[i].isfilled);
         }
         
         for (int i = 0; i < tmpvector.size(); i++)
