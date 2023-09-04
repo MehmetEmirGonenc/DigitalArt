@@ -20,7 +20,7 @@ public:
     std::vector<pixel> circle(int origin_coord[2], int radious);
 
     //Color Filters
-    std::vector<pixel> Colorizer_Transition(std::vector<pixel> element, int scale = 1);
+    std::vector<pixel> Colorizer_Transition(std::vector<pixel> element, int mode = 1,int scale = 1);
 
 private:
 };

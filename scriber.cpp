@@ -8,13 +8,25 @@ std::vector<pixel> scribe::circle(int origin_coord[2], int radious)
     return circleVector;
 }
 
-std::vector<pixel> scribe::Colorizer_Transition(std::vector<pixel> element, int scale)
+std::vector<pixel> scribe::Colorizer_Transition(std::vector<pixel> element, int mode,int scale)
 {
+    int finder_counter = element[0].coord[1];
     for (size_t i = 0, j = 0; i < element.size(); i++, j+= scale)
     {
-        element[i].RGB[0] = (j*3)%255;
+        if (mode == 2)
+        {
+            if (element[i].coord[1] == finder_counter)
+            {
+            std::cout<< element[i].coord[1]<<"\n";
+            j = 0;
+            finder_counter++;
+            }
+        }
+
+        element[i].RGB[0] = (j*8)%255;
         element[i].RGB[1] = (j)%255;
-        element[i].RGB[2] = (j*2)%255;
+        element[i].RGB[2] = (j)%255;
+        
     }
     return element;
 }

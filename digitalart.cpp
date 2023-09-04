@@ -186,7 +186,7 @@ int main()
         std::vector<pixel> tmpvector;
         if (order[i].type == 'R' || order[i].type == 'r')
         {
-            tmpvector = canvas.Colorizer_Transition(canvas.rectangle(positionX, positionY, order[i].width, order[i].height, order[i].isfilled));
+            tmpvector = canvas.Colorizer_Transition(canvas.rectangle(positionX, positionY, order[i].width, order[i].height, order[i].isfilled),2);
         }
         
         for (int i = 0; i < tmpvector.size(); i++)
