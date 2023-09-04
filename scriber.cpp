@@ -35,6 +35,7 @@ std::vector<pixel> scribe::Colorizer_Transition(std::vector<pixel> element, int 
 scribe::scribe()
 {
 }
+//Shapes
 std::vector<pixel> scribe::rectangle(int origin_coordX, int origin_coordY, int width, int height, bool isfilled, int R, int G, int B)
 {
     std::vector<pixel> rectangleVector;
@@ -88,4 +89,33 @@ std::vector<pixel> scribe::rectangle(int origin_coordX, int origin_coordY, int w
 
     }
     return rectangleVector;
+}
+std::vector<pixel> scribe::triangle (int origin_coordX, int origin_coordY, int height, bool isfilled, int R, int G, int B)
+{
+    std::vector<pixel> triangleVector;
+    //if odd
+    if (height%2 != 0)
+    {
+        int tempY = origin_coordY + (height-1)/2;
+        int n = 1; //For number of pixel for every row
+        for (int i = tempY; i >= (origin_coordY - (height-1)/2); i--, n+=2)
+        {
+            int tempX = origin_coordX - ((n-1)/2);
+            for (int j = n; j > 0; j--, tempX++)
+            {
+                pixel temppix;
+                temppix.coord[0] = tempX;
+                temppix.coord[1] = i;
+                temppix.RGB[0] = R;
+                temppix.RGB[1] = G;
+                temppix.RGB[2] = B;
+                triangleVector.push_back(temppix);
+            }
+        }
+    }
+    else
+    {
+
+    }
+    return triangleVector;
 }

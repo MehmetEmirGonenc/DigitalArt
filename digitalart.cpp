@@ -116,13 +116,15 @@ int main(int argc, char* argv[])
                 }
                 else if (tempshape.type == 'T' || tempshape.type == 't')
                 {
-                    std::cout << "Width :";
-                    std::cin >>tempshape.width;
+                    std::cout << "Height :";
+                    std::cin >>tempshape.height;
+                    tempshape.width = 0; // Not important we don't use it
                 }
                 else if (tempshape.type == 'C' || tempshape.type == 'c')
                 {
                     std::cout << "Radious :";
                     std::cin >>tempshape.width;
+                    tempshape.height; // Not important we don't use it
                 }
                 order.push_back(tempshape);
             } 
@@ -204,6 +206,10 @@ int main(int argc, char* argv[])
         if (order[i].type == 'R' || order[i].type == 'r')
         {
             tmpvector = canvas.Colorizer_Transition(canvas.rectangle(positionX, positionY, order[i].width, order[i].height, order[i].isfilled),2 , 0.3f );
+        }
+        else if (order[i].type == 'T' || order[i].type == 't')
+        {
+            tmpvector = canvas.Colorizer_Transition(canvas.triangle(positionX, positionY, order[i].height, order[i].isfilled),1);
         }
         
         for (int i = 0; i < tmpvector.size(); i++)
