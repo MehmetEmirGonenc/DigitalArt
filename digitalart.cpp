@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <vector>
 #include <cmath>
+#include <cstring>
 #include "scriber.h"
 
 #pragma pack(1) // Disable structure padding
@@ -40,77 +41,93 @@ struct shape
 };
 
 
-int main()
+int main(int argc, char* argv[])
 {
     //UI   // Note to me : Add ensuring operations
     //variables
     int WIDTH;
     int HEIGHT;
     std::vector<shape> order;
-    std::cout << "Welcome to Digital Art Program!\n";
-    std::cout << "Input width of picture that you want to create : ";
-    std::cin >> WIDTH;
-    std::cout << "Input height of picture that you want to create : ";
-    std::cin >> HEIGHT;
-    while (true)
+    //Developer fast test area
+    if (!strcmp(argv[1],"-t"))
     {
+        WIDTH = 500;
+        HEIGHT= 500;
         shape tempshape;
-        std::cout << "############### Let's begin to create our art #########################\n";
-        std::cout << "R -> Rectangle\n";
-        std::cout << "T -> Triangle\n";
-        std::cout << "C -> Circle\n";
-        std::cout << "P -> Process\n";
-        std::cout << "E -> Exit\n";
-        std::cout << "-->";
-        std::cin >> tempshape.type;
-        if (tempshape.type == 'E' || tempshape.type == 'e')
-        {
-            return 2;
-        }
-        else if (tempshape.type == 'P' || tempshape.type == 'p')
-        {
-            if (order.empty())
-            {
-                std::cout << "Eroor: Order is null!\n";
-                return 3;
-            }
-            break;
-        }
-        else
-        {
-            std::cout << "---Set Position--- \n";
-            std::cout << "C -> Center \n";
-            std::cout << "1 -> Area 1\n";
-            std::cout << "2 -> Area 2\n";
-            std::cout << "3 -> Area 3\n";
-            std::cout << "4 -> Area 4\n";
-            std::cout << "-->";
-            std::cin >> tempshape.position;
-            std::cout << "0->Not filled\n";
-            std::cout << "1->Filled\n";
-            std::cout << "-->";
-            std::cin >> tempshape.isfilled;
-            if (tempshape.type == 'R' || tempshape.type == 'r')
-            {
-                std::cout << "Width :";
-                std::cin >>tempshape.width;
-                std::cout << "Height :";
-                std::cin >>tempshape.height;
-            }
-            else if (tempshape.type == 'T' || tempshape.type == 't')
-            {
-                std::cout << "Width :";
-                std::cin >>tempshape.width;
-            }
-            else if (tempshape.type == 'C' || tempshape.type == 'c')
-            {
-                std::cout << "Radious :";
-                std::cin >>tempshape.width;
-            }
-            order.push_back(tempshape);
-        } 
+        tempshape.type = 'r';
+        tempshape.isfilled = 1;
+        tempshape.width = 101;
+        tempshape.width = 101;
+        tempshape.position = 'c';
+        order.push_back(tempshape);
     }
-
+    //
+    else
+    { 
+        std::cout << "Welcome to Digital Art Program!\n";
+        std::cout << "Input width of picture that you want to create : ";
+        std::cin >> WIDTH;
+        std::cout << "Input height of picture that you want to create : ";
+        std::cin >> HEIGHT;
+        while (true)
+        {
+            shape tempshape;
+            std::cout << "############### Let's begin to create our art #########################\n";
+            std::cout << "R -> Rectangle\n";
+            std::cout << "T -> Triangle\n";
+            std::cout << "C -> Circle\n";
+            std::cout << "P -> Process\n";
+            std::cout << "E -> Exit\n";
+            std::cout << "-->";
+            std::cin >> tempshape.type;
+            if (tempshape.type == 'E' || tempshape.type == 'e')
+            {
+                return 2;
+            }
+            else if (tempshape.type == 'P' || tempshape.type == 'p')
+            {
+                if (order.empty())
+                {
+                    std::cout << "Eroor: Order is null!\n";
+                    return 3;
+                }
+                break;
+            }
+            else
+            {
+                std::cout << "---Set Position--- \n";
+                std::cout << "C -> Center \n";
+                std::cout << "1 -> Area 1\n";
+                std::cout << "2 -> Area 2\n";
+                std::cout << "3 -> Area 3\n";
+                std::cout << "4 -> Area 4\n";
+                std::cout << "-->";
+                std::cin >> tempshape.position;
+                std::cout << "0->Not filled\n";
+                std::cout << "1->Filled\n";
+                std::cout << "-->";
+                std::cin >> tempshape.isfilled;
+                if (tempshape.type == 'R' || tempshape.type == 'r')
+                {
+                    std::cout << "Width :";
+                    std::cin >>tempshape.width;
+                    std::cout << "Height :";
+                    std::cin >>tempshape.height;
+                }
+                else if (tempshape.type == 'T' || tempshape.type == 't')
+                {
+                    std::cout << "Width :";
+                    std::cin >>tempshape.width;
+                }
+                else if (tempshape.type == 'C' || tempshape.type == 'c')
+                {
+                    std::cout << "Radious :";
+                    std::cin >>tempshape.width;
+                }
+                order.push_back(tempshape);
+            } 
+        }
+    }
     //Create canvas
     scribe canvas;
     //Make blank picture
@@ -186,7 +203,7 @@ int main()
         std::vector<pixel> tmpvector;
         if (order[i].type == 'R' || order[i].type == 'r')
         {
-            tmpvector = canvas.Colorizer_Transition(canvas.rectangle(positionX, positionY, order[i].width, order[i].height, order[i].isfilled),2);
+            tmpvector = canvas.Colorizer_Transition(canvas.rectangle(positionX, positionY, order[i].width, order[i].height, order[i].isfilled),2 , 0.3f );
         }
         
         for (int i = 0; i < tmpvector.size(); i++)
@@ -202,17 +219,6 @@ int main()
     }
     //Close file
     outFile.close();
-    
-    //TEST AREA(DEBUG)
-    //for (int i = 0; i < tmpvector.size(); ++i) {
-    //    int values[5] = {tmpvector[i].coord[0],tmpvector[i].coord[1],tmpvector[i].RGB[0],tmpvector[i].RGB[1],tmpvector[i].RGB[2]};
-    //    for (int j = 0; j < 5; j++)
-    //    {
-    //        std::cout<<values[j] << ", ";
-    //    }
-    //    std::cout<<std::endl;
-    //}
-    //
     
     std::cout << "Success" << std:: endl;
     
