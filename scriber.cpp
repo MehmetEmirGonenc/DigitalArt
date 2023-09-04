@@ -10,7 +10,7 @@ std::vector<pixel> scribe::circle(int origin_coord[2], int radious)
 scribe::scribe()
 {
 }
-std::vector<pixel> scribe::rectangle(int origin_coordX, int origin_coordY, int width, int height, int R, int G, int B, bool isfilled)
+std::vector<pixel> scribe::rectangle(int origin_coordX, int origin_coordY, int width, int height, bool isfilled, int R, int G, int B)
 {
     std::vector<pixel> rectangleVector;
     // We need to seperate odd and even numbers because
