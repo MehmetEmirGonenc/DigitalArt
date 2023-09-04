@@ -2,6 +2,7 @@
 #include <fstream>
 #include <cstdint>
 #include <vector>
+#include <cmath>
 #include "scriber.h"
 
 #pragma pack(1) // Disable structure padding
@@ -45,7 +46,6 @@ int main()
     int WIDTH;
     int HEIGHT;
     std::vector<shape> order;
-    shape tempshape;
     std::cout << "Welcome to Digital Art Program!\n";
     std::cout << "Input width of picture that you want to create : ";
     std::cin >> WIDTH;
@@ -53,8 +53,9 @@ int main()
     std::cin >> HEIGHT;
     while (true)
     {
+        shape tempshape;
         std::cout << "############### Let's begin to create our art #########################\n";
-        std::cout << "R -> Eectangle\n";
+        std::cout << "R -> Rectangle\n";
         std::cout << "T -> Triangle\n";
         std::cout << "C -> Circle\n";
         std::cout << "P -> Process\n";
@@ -67,7 +68,7 @@ int main()
         }
         else if (tempshape.type == 'P' || tempshape.type == 'p')
         {
-            if (order.size() == 0)
+            if (order.empty())
             {
                 std::cout << "Eroor: Order is null!\n";
                 return 3;
@@ -101,6 +102,7 @@ int main()
                 std::cout << "Radious :";
                 std::cin >>tempshape.width;
             }
+            order.push_back(tempshape);
         } 
     }
 
@@ -115,19 +117,16 @@ int main()
     dibHeader.ImageWidth = static_cast<uint32_t>(WIDTH);
     dibHeader.ImageHeight = static_cast<uint32_t>(HEIGHT);
 
-    //Creating blank image
-    std::vector<uint8_t> blank_image;
-    for (int i = 0; i < WIDTH * HEIGHT * 3; i++)
-    {
-        blank_image.push_back(255);
-    }
-
     //Calculations
-    uint32_t imageSize = sizeof(blank_image);
+    uint32_t imageSize = WIDTH * HEIGHT * 3;
 
     dibHeader.ImageSize = imageSize;
     fileHeader.dataOffset = sizeof(fileHeader) + sizeof(dibHeader);
     fileHeader.filesize = fileHeader.dataOffset + imageSize;
+
+    
+    //Creating blank image
+    std::vector<uint8_t> blank_image(imageSize, 255);
 
     //Create file
     std::ofstream outFile("image.bmp", std::ios::binary);
@@ -143,31 +142,59 @@ int main()
 
     outFile.write(reinterpret_cast<char*>(&fileHeader), sizeof(fileHeader));
     outFile.write(reinterpret_cast<char*>(&dibHeader), sizeof(dibHeader));
-    outFile.write(reinterpret_cast<char*>(&blank_image), imageSize);
-
-    //Decleration coord postions
-    int CENTER[2] = {(WIDTH / 2), (HEIGHT / 2)};
-    int AREA1[2] = {(WIDTH * 3 / 4), (HEIGHT * 3 / 4)};
-    int AREA2[2] = {(WIDTH / 4), (HEIGHT * 3 / 4)};
-    int AREA3[2] = {(WIDTH / 4), (HEIGHT / 4)};
-    int AREA4[2] = {(WIDTH * 3 / 4), (HEIGHT / 4)};
+    outFile.write(reinterpret_cast<char*>(blank_image.data()), imageSize);
 
     //Modify Image
     //BPM keep pixels left bottom cornet to right top corner
     //Keep RGB order BGR
-    //Create a rectangle
-    std::vector<pixel> tmpvector = canvas.rectangle(250, 250, 5, 5, 255, 100, 50);
-    for (int i = 0; i < tmpvector.size(); i++)
+    for (int i = 0; i < order.size(); i++)
     {
-        //Replace
-        int pixelplace = tmpvector[i].coord[0] + (tmpvector[i].coord[1] * WIDTH);
-        outFile.seekp((fileHeader.dataOffset + pixelplace*3));
+        //Decleration coord postions
+        int positionX = 0, positionY = 0;
+        switch (order[i].position)
+        {
+        case 'C':
+        case 'c':
+            positionX = std::round(WIDTH / 2);
+            positionY = std::round(HEIGHT / 2);
+            break;
+        case '1':
+            positionX = std::round(WIDTH * 3 / 4);
+            positionY = std::round(HEIGHT * 3 / 4);
+            break;
+        case '2':
+            positionX = std::round(WIDTH / 4);
+            positionY = std::round(HEIGHT * 3 / 4);
+            break;
+        case '3':
+            positionX = std::round(WIDTH / 4);
+            positionY = std::round(HEIGHT / 4);
+            break;
+        case '4':
+            positionX = std::round(WIDTH * 3 / 4);
+            positionY = std::round(HEIGHT / 4);
+            break;
+        default:
+            break;
+        }
+        std::cout << positionX<<" , "<<positionY <<"\n";
+        std::vector<pixel> tmpvector;
+        if (order[i].type == 'R' || order[i].type == 'r')
+        {
+            tmpvector = canvas.rectangle(positionX, positionY, order[i].width, order[i].height, 255, 100, 50);
+        }
+        
+        for (int i = 0; i < tmpvector.size(); i++)
+        {
+            //Replace
+            int pixelplace = tmpvector[i].coord[0] + (tmpvector[i].coord[1] * WIDTH);
+            outFile.seekp((fileHeader.dataOffset + pixelplace*3));
 
-        outFile.put(tmpvector[i].RGB[2]);
-        outFile.put(tmpvector[i].RGB[1]);
-        outFile.put(tmpvector[i].RGB[0]);
+            outFile.put(tmpvector[i].RGB[2]);
+            outFile.put(tmpvector[i].RGB[1]);
+            outFile.put(tmpvector[i].RGB[0]);
+        }
     }
-
     //Close file
     outFile.close();
     
