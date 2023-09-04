@@ -19,6 +19,9 @@ public:
     std::vector<pixel> rectangle(int origin_coordX, int origin_coordY, int width, int height, bool isfilled, int R = 0, int G = 0, int B = 0);
     std::vector<pixel> circle(int origin_coord[2], int radious);
 
+    //Color Filters
+    std::vector<pixel> Colorizer_Transition(std::vector<pixel> element, int scale = 1);
+
 private:
 };
 #endif

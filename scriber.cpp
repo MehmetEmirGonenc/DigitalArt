@@ -7,6 +7,18 @@ std::vector<pixel> scribe::circle(int origin_coord[2], int radious)
 
     return circleVector;
 }
+
+std::vector<pixel> scribe::Colorizer_Transition(std::vector<pixel> element, int scale)
+{
+    for (size_t i = 0, j = 0; i < element.size(); i++, j+= scale)
+    {
+        element[i].RGB[0] = (j*3)%255;
+        element[i].RGB[1] = (j)%255;
+        element[i].RGB[2] = (j*2)%255;
+    }
+    return element;
+}
+
 scribe::scribe()
 {
 }
