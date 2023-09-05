@@ -1,12 +1,5 @@
 #include "scriber.h"
 
-std::vector<pixel> scribe::circle(int origin_coord[2], int radious)
-{
-    std::vector<pixel> circleVector;
-
-
-    return circleVector;
-}
 
 std::vector<pixel> scribe::Colorizer_Transition(std::vector<pixel> element, int mode,float scale)
 {
@@ -118,4 +111,61 @@ std::vector<pixel> scribe::triangle (int origin_coordX, int origin_coordY, int h
 
     }
     return triangleVector;
+}
+
+std::vector<pixel> scribe::circle(int origin_coordX, int origin_coordY, int radious, bool isfilled,int R, int G, int B)
+{
+    std::vector<pixel> circleVector;
+    int r = radious;
+    int y = 0;
+    int radiusError = 1 - r;
+
+    while (r >= y)
+    {
+        circleVector.push_back({origin_coordX + r, origin_coordY + y});    //Coord
+        circleVector.push_back({R, G, B});                                 //Color
+        circleVector.push_back({origin_coordX - r, origin_coordY + y});    //Coord
+        circleVector.push_back({R, G, B});                                 //Color
+        circleVector.push_back({origin_coordX + r, origin_coordY - y});    //Coord
+        circleVector.push_back({R, G, B});                                 //Color
+        circleVector.push_back({origin_coordX - r, origin_coordY - y});    //Coord
+        circleVector.push_back({R, G, B});                                 //Color
+        circleVector.push_back({origin_coordX + y, origin_coordY + r});    //Coord
+        circleVector.push_back({R, G, B});                                 //Color
+        circleVector.push_back({origin_coordX - y, origin_coordY + r});    //Coord
+        circleVector.push_back({R, G, B});                                 //Color
+        circleVector.push_back({origin_coordX + y, origin_coordY - r});    //Coord
+        circleVector.push_back({R, G, B});                                 //Color
+        circleVector.push_back({origin_coordX - y, origin_coordY - r});    //Coord
+        circleVector.push_back({R, G, B});                                 //Color
+
+        if (isfilled == 1)
+        {
+            for (int i = origin_coordY - y; i <= origin_coordY + y; i++)
+            {
+                for (int j = origin_coordX - r; j <= origin_coordX + r; j++)
+                {
+                    circleVector.push_back({j,i});
+                    circleVector.push_back({R, G, B});
+                }
+            }
+            for (int i = origin_coordY - r; i <= origin_coordY + r; i++)
+            {
+                for (int j = origin_coordX - y; j <= origin_coordX + y; j++)
+                {
+                    circleVector.push_back({j,i});
+                    circleVector.push_back({R, G, B});
+                }
+            }
+        }
+        y++;
+
+        if (radiusError < 0) {
+            radiusError += 2 * y + 1;
+        } else {
+            r--;
+            radiusError += 2 * (y - r + 1);
+        }
+    }
+    return circleVector;
 }

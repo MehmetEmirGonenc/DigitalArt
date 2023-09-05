@@ -203,15 +203,23 @@ int main(int argc, char* argv[])
         }
         std::cout << positionX<<" , "<<positionY <<"\n";
         std::vector<pixel> tmpvector;
-        if (order[i].type == 'R' || order[i].type == 'r')
+        switch (order[i].type)
         {
+        case 'R':
+        case 'r':
             tmpvector = canvas.Colorizer_Transition(canvas.rectangle(positionX, positionY, order[i].width, order[i].height, order[i].isfilled),2 , 0.3f );
-        }
-        else if (order[i].type == 'T' || order[i].type == 't')
-        {
+            break;
+        case 'T':
+        case 't':
             tmpvector = canvas.Colorizer_Transition(canvas.triangle(positionX, positionY, order[i].height, order[i].isfilled),1);
+            break;
+        case 'C':
+        case 'c':
+            tmpvector = canvas.Colorizer_Transition(canvas.circle(positionX, positionY, order[i].width, 1),2);
+            break;
+        default:
+            break;
         }
-        
         for (int i = 0; i < tmpvector.size(); i++)
         {
             //Replace
