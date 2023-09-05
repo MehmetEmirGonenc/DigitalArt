@@ -49,15 +49,15 @@ int main(int argc, char* argv[])
     int HEIGHT;
     std::vector<shape> order;
     //Developer fast test area
-    if (!strcmp(argv[1],"-t"))
+    if (argc == 2 && !strcmp(argv[1],"-t"))
     {
-        WIDTH = 500;
-        HEIGHT= 500;
+        WIDTH = 50;
+        HEIGHT= 50;
         shape tempshape;
         tempshape.type = 'r';
         tempshape.isfilled = 1;
-        tempshape.width = 101;
-        tempshape.width = 101;
+        tempshape.width = 21;
+        tempshape.width = 21;
         tempshape.position = 'c';
         order.push_back(tempshape);
     }
@@ -142,7 +142,8 @@ int main(int argc, char* argv[])
     dibHeader.ImageHeight = static_cast<uint32_t>(HEIGHT);
 
     //Calculations
-    uint32_t imageSize = WIDTH * HEIGHT * 3;
+    uint32_t imageSize = dibHeader.ImageWidth * dibHeader.ImageHeight * 3; // Adding pixel size with RGB values
+    imageSize += ((dibHeader.ImageWidth % 4) * 3) * dibHeader.ImageHeight; // Adding padding pixels
 
     dibHeader.ImageSize = imageSize;
     fileHeader.dataOffset = sizeof(fileHeader) + sizeof(dibHeader);
@@ -151,6 +152,7 @@ int main(int argc, char* argv[])
     
     //Creating blank image
     std::vector<uint8_t> blank_image(imageSize, 255);
+    
 
     //Create file
     std::ofstream outFile("image.bmp", std::ios::binary);
@@ -163,7 +165,7 @@ int main(int argc, char* argv[])
     }
 
     //Write Bmp file
-
+    std::cout << imageSize;
     outFile.write(reinterpret_cast<char*>(&fileHeader), sizeof(fileHeader));
     outFile.write(reinterpret_cast<char*>(&dibHeader), sizeof(dibHeader));
     outFile.write(reinterpret_cast<char*>(blank_image.data()), imageSize);
@@ -207,7 +209,7 @@ int main(int argc, char* argv[])
         {
         case 'R':
         case 'r':
-            tmpvector = canvas.Colorizer_Transition(canvas.rectangle(positionX, positionY, order[i].width, order[i].height, order[i].isfilled),2 , 0.3f );
+            tmpvector = canvas.Colorizer_Transition(canvas.rectangle(positionX, positionY, order[i].width, order[i].height, order[i].isfilled),1 , 0.3f );
             break;
         case 'T':
         case 't':
