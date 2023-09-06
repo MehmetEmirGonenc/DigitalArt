@@ -51,13 +51,13 @@ int main(int argc, char* argv[])
     //Developer fast test area
     if (argc == 2 && !strcmp(argv[1],"-t"))
     {
-        WIDTH = 50;
-        HEIGHT= 50;
+        WIDTH = 500;
+        HEIGHT= 500;
         shape tempshape;
-        tempshape.type = 'r';
-        tempshape.isfilled = 1;
-        tempshape.width = 21;
-        tempshape.width = 21;
+        tempshape.type = 's';
+        tempshape.isfilled = 0;
+        tempshape.width = 50;
+        tempshape.width = 50;
         tempshape.position = 'c';
         order.push_back(tempshape);
     }
@@ -217,7 +217,11 @@ int main(int argc, char* argv[])
             break;
         case 'C':
         case 'c':
-            tmpvector = canvas.Colorizer_Transition(canvas.circle(positionX, positionY, order[i].width, 1),2);
+            tmpvector = canvas.Colorizer_Transition(canvas.circle(positionX, positionY, order[i].width, order[i].isfilled),2);
+            break;
+        case 'S':
+        case 's':
+            tmpvector = canvas.spiral(positionX, positionY, order[i].width, order[i].isfilled, 5);
             break;
         default:
             break;

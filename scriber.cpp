@@ -169,3 +169,41 @@ std::vector<pixel> scribe::circle(int origin_coordX, int origin_coordY, int radi
     }
     return circleVector;
 }
+std::vector<pixel> scribe::spiral(int origin_coordX, int origin_coordY, int radious, bool isfilled, int scale, int R, int G, int B)
+{
+    std::vector<pixel> spiralVector;
+    int tempX = origin_coordX;
+    int tempY = origin_coordY;
+    int tempRadi = radious;
+    bool reverse = false;
+    while (radious > 1)
+    {
+        std::vector<pixel> partofcircle = scribe::circle(tempX, tempY, radious, isfilled, R, G, B);
+        for (int i = 0; i < partofcircle.size(); i++)
+        {
+            pixel tmp = partofcircle[i];
+            if (reverse == 0 && tmp.coord[1] >= tempY)
+            {
+                spiralVector.push_back(tmp);
+            }
+            else if (reverse == 1 && tmp.coord[1] <= tempY)
+            {
+                spiralVector.push_back(tmp);
+            }
+        }
+        radious -= scale;
+        if (reverse == 0)
+        {
+            tempX -= scale;
+            reverse = 1;
+        }
+        else
+        {
+            tempX += scale;
+            reverse = 0;
+        }
+        
+        
+    }
+    return spiralVector;
+}
