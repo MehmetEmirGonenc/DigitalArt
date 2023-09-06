@@ -37,6 +37,7 @@ struct shape
     int width;//Also can be radius
     int height;
     char position;
+    int mode;
     bool isfilled;
 };
 
@@ -54,10 +55,10 @@ int main(int argc, char* argv[])
         WIDTH = 500;
         HEIGHT= 500;
         shape tempshape;
-        tempshape.type = 's';
+        tempshape.type = 'b';
         tempshape.isfilled = 0;
         tempshape.width = 50;
-        tempshape.width = 50;
+        tempshape.height = 20;
         tempshape.position = 'c';
         order.push_back(tempshape);
     }
@@ -118,6 +119,8 @@ int main(int argc, char* argv[])
                 {
                     std::cout << "Height :";
                     std::cin >>tempshape.height;
+                    std::cout << "Mode :";
+                    std::cin >>tempshape.mode;
                     tempshape.width = 0; // Not important we don't use it
                 }
                 else if (tempshape.type == 'C' || tempshape.type == 'c')
@@ -125,6 +128,8 @@ int main(int argc, char* argv[])
                     std::cout << "Radious :";
                     std::cin >>tempshape.width;
                     tempshape.height; // Not important we don't use it
+                    std::cout << "Mode :";
+                    std::cin >>tempshape.mode;
                 }
                 order.push_back(tempshape);
             } 
@@ -213,7 +218,7 @@ int main(int argc, char* argv[])
             break;
         case 'T':
         case 't':
-            tmpvector = canvas.Colorizer_Transition(canvas.triangle(positionX, positionY, order[i].height, order[i].isfilled),1);
+            tmpvector = canvas.Colorizer_Transition(canvas.triangle(positionX, positionY, order[i].height, order[i].isfilled,order[i].mode),1);
             break;
         case 'C':
         case 'c':
@@ -221,7 +226,11 @@ int main(int argc, char* argv[])
             break;
         case 'S':
         case 's':
-            tmpvector = canvas.spiral(positionX, positionY, order[i].width, order[i].isfilled, 5);
+            tmpvector = canvas.spiral(positionX, positionY, order[i].width, order[i].isfilled, order[i].mode, 2);
+            break;
+        case 'B':
+        case 'b':
+            tmpvector = canvas.butterfly(positionX, positionY, order[i].height, order[i].isfilled);
             break;
         default:
             break;

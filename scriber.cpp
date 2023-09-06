@@ -83,33 +83,52 @@ std::vector<pixel> scribe::rectangle(int origin_coordX, int origin_coordY, int w
     }
     return rectangleVector;
 }
-std::vector<pixel> scribe::triangle (int origin_coordX, int origin_coordY, int height, bool isfilled, int R, int G, int B)
-{
+std::vector<pixel> scribe::triangle (int origin_coordX, int origin_coordY, int height, bool isfilled, int mode,int R, int G, int B)
+{  
+    ///###Improve it!!!
     std::vector<pixel> triangleVector;
-    //if odd
-    if (height%2 != 0)
+    int n; //For number of pixel for every row
+    int tempY; 
+    if (mode == 0)
     {
-        int tempY = origin_coordY + (height-1)/2;
-        int n = 1; //For number of pixel for every row
-        for (int i = tempY; i >= (origin_coordY - (height-1)/2); i--, n+=2)
+        n = 1;
+        tempY = origin_coordY + (height-1)/2;
+    }
+    else if (mode == 1)
+    {
+        n = 1;
+        tempY = origin_coordY - (height-1)/2;
+    }
+    for (int i = tempY; i >= (origin_coordY - (height-1)/2);)
+    {
+        int tempX = origin_coordX - ((n-1)/2);
+        for (int j = n; j > 0; j--, tempX++)
         {
-            int tempX = origin_coordX - ((n-1)/2);
-            for (int j = n; j > 0; j--, tempX++)
+            pixel temppix;
+            temppix.coord[0] = tempX;
+            temppix.coord[1] = i;
+            temppix.RGB[0] = R;
+            temppix.RGB[1] = G;
+            temppix.RGB[2] = B;
+            triangleVector.push_back(temppix);
+        }
+        if (mode == 0)
+        {
+            n +=2;
+            i--;
+        }
+        else if (mode == 1)
+        {
+            n +=2;
+            i++;
+            if (i > origin_coordY + (height-1)/2)
             {
-                pixel temppix;
-                temppix.coord[0] = tempX;
-                temppix.coord[1] = i;
-                temppix.RGB[0] = R;
-                temppix.RGB[1] = G;
-                temppix.RGB[2] = B;
-                triangleVector.push_back(temppix);
+                break;
             }
         }
     }
-    else
-    {
 
-    }
+
     return triangleVector;
 }
 
@@ -169,8 +188,12 @@ std::vector<pixel> scribe::circle(int origin_coordX, int origin_coordY, int radi
     }
     return circleVector;
 }
-std::vector<pixel> scribe::spiral(int origin_coordX, int origin_coordY, int radious, bool isfilled, int scale, int R, int G, int B)
+std::vector<pixel> scribe::spiral(int origin_coordX, int origin_coordY, int radious, bool isfilled, int mode/*for differen combinations*/,int scale, int R, int G, int B)
 {
+    // 0 -> Normal Spiral
+    // 1 -> Reverse Spiral
+    // 2 -> Hopper
+    // 3 -> Reverse Hopper
     std::vector<pixel> spiralVector;
     int tempX = origin_coordX;
     int tempY = origin_coordY;
@@ -194,16 +217,65 @@ std::vector<pixel> scribe::spiral(int origin_coordX, int origin_coordY, int radi
         radious -= scale;
         if (reverse == 0)
         {
-            tempX -= scale;
+            if (mode == 0)
+            {
+                tempX -= scale;
+            }
+            else if (mode == 1)
+            {
+                tempX -= -scale;
+            }
+            else if (mode == 2)
+            {
+                tempX -= (scale + 1);
+            }
+            else if (mode == 3)
+            {
+                tempX += (scale + 1);
+            }
             reverse = 1;
         }
         else
         {
-            tempX += scale;
+            if (mode == 0)
+            {
+                tempX -= -scale;
+            }
+            else if (mode == 1)
+            {
+                tempX -= scale;
+            }
+            else if (mode == 2)
+            {
+                tempX -= (scale + 1);
+            }
+            else if (mode == 3)
+            {
+                tempX += (scale + 1);
+            }
             reverse = 0;
         }
-        
-        
     }
     return spiralVector;
+}
+std::vector<pixel> scribe::butterfly(int origin_coordX, int origin_coordY, int height, bool isfilled, int mode, int R, int G, int B)
+{
+    std::vector<pixel> butterfly;
+    std::vector<pixel> tri1 = triangle(origin_coordX, origin_coordY, height, isfilled, 0);
+    std::vector<pixel> tri2 = triangle(origin_coordX, origin_coordY, height, isfilled, 1);
+    for (int i = 0; i < tri1.size(); i++)
+    {
+        butterfly.push_back(tri1[i]);
+    }
+    for (int i = 0; i < tri2.size(); i++)
+    {
+        butterfly.push_back(tri2[i]);
+    }
+    return butterfly;
+}
+
+std::vector<pixel> scribe::parallelogram(int origin_coordX, int origin_coordY, int height, bool isfilled, int R, int G, int B)
+{
+    std::vector<pixel> parallelVector;
+    return parallelVector;
 }
