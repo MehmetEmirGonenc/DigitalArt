@@ -55,11 +55,12 @@ int main(int argc, char* argv[])
         WIDTH = 500;
         HEIGHT= 500;
         shape tempshape;
-        tempshape.type = 'b';
+        tempshape.type = 't';
         tempshape.isfilled = 0;
         tempshape.width = 50;
         tempshape.height = 20;
         tempshape.position = 'c';
+        tempshape.mode = 0;
         order.push_back(tempshape);
     }
     //
@@ -231,6 +232,10 @@ int main(int argc, char* argv[])
         case 'B':
         case 'b':
             tmpvector = canvas.butterfly(positionX, positionY, order[i].height, order[i].isfilled);
+            break;
+        case 'P':
+        case 'p':
+            tmpvector = canvas.parallelogram(positionX, positionY, order[i].height, order[i].isfilled);
             break;
         default:
             break;

@@ -91,10 +91,33 @@ std::vector<pixel> scribe::triangle (int origin_coordX, int origin_coordY, int h
     int tempY; 
     if (mode == 0)
     {
+        //Right triangle 
+        tempY = origin_coordY + (height/2);
+        n = 1;
+        while (tempY > (origin_coordY- (height/2)))
+        {
+            int tempX = origin_coordX;
+            for (int i = n; i > 0; i--, tempX++)
+            {
+                pixel temppix;
+                temppix.coord[0] = tempX;
+                temppix.coord[1] = tempY;
+                temppix.RGB[0] = R;
+                temppix.RGB[1] = G;
+                temppix.RGB[2] = B;
+                triangleVector.push_back(temppix);
+            }
+            n++;
+            tempY--;
+        }
+        return triangleVector;
+    }
+    else if (mode == 1)
+    {
         n = 1;
         tempY = origin_coordY + (height-1)/2;
     }
-    else if (mode == 1)
+    else if (mode == 2)
     {
         n = 1;
         tempY = origin_coordY - (height-1)/2;
@@ -277,5 +300,24 @@ std::vector<pixel> scribe::butterfly(int origin_coordX, int origin_coordY, int h
 std::vector<pixel> scribe::parallelogram(int origin_coordX, int origin_coordY, int height, bool isfilled, int R, int G, int B)
 {
     std::vector<pixel> parallelVector;
+    int tmph;
+    if (height%2 == 0)
+    {
+        tmph = height/2 - 1;
+    }
+    else
+    {
+        tmph = height/2;
+    }
+    std::vector<pixel> tri1 = triangle(origin_coordX, origin_coordY + tmph, height, isfilled, 0);
+    std::vector<pixel> tri2 = triangle(origin_coordX, origin_coordY - (height/2), height, isfilled, 1);
+    for (int i = 0; i < tri1.size(); i++)
+    {
+        parallelVector.push_back(tri1[i]);
+    }
+    for (int i = 0; i < tri2.size(); i++)
+    {
+        parallelVector.push_back(tri2[i]);
+    }
     return parallelVector;
 }
